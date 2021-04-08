@@ -17,6 +17,14 @@ class MyBookDatabase(context: Context) {
         openHelper.readableDatabase
     }
 
+    public fun open() {
+        openHelper.writableDatabase
+    }
+
+    public fun close() {
+        openHelper.writableDatabase.close()
+    }
+
     fun addBook(name: String) {
         val writeableDb = openHelper.writableDatabase
 
@@ -24,7 +32,6 @@ class MyBookDatabase(context: Context) {
         values.put(MyBookOpenHelper.FIELD_NAME, name)
 
         writeableDb.insert(MyBookOpenHelper.TABLE_BOOK, null, values)
-        writeableDb.close()
     }
 
     // create update function
@@ -50,6 +57,17 @@ class MyBookDatabase(context: Context) {
         }
 
         return bookList
+    }
+
+
+    public fun deleteBookById(id: String): Int {
+        val database = openHelper.writableDatabase
+        return database.delete(MyBookOpenHelper.TABLE_BOOK, "id = $id", null)
+    }
+
+    public fun updateById(id: String, values: ContentValues?): Int {
+        val database = openHelper.writableDatabase
+        return database.update(MyBookOpenHelper.TABLE_BOOK, values, "id = ?", arrayOf(id))
     }
 
 }
